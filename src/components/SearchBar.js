@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: 15,
     flexDirection: "row",
-    marginTop: 15
+    marginVertical: 15
   },
   iconStyle: { fontSize: 35, alignSelf: "center", marginHorizontal: 15 },
   inputStyle: { flex: 1, fontSize: 18 }

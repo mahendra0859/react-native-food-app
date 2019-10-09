@@ -3,19 +3,30 @@ import { View, Text, StyleSheet } from "react-native";
 
 import SearchBar from "../components/SearchBar";
 
+import yelp from "../api/yelp";
+
 const SearchScreen = () => {
-  const [term, setTerm] = useState('');
+  const [term, setTerm] = useState(''),
+    [results, setResults] = useState([]),
+    [errorMessage, setErrorMessage] = useState('');
+
+  const searchApi = async () => {
+    try {
+      const response = await yelp.get('/search', { params: { limit: 50, term, location: 'san jose' } });
+      setResults(response.data.businesses);
+    } catch (err) { setErrorMessage('Something went wrong!!') }
+  }
   return (
     <View>
-      <Text style={styles.textStyle}>Serach Screen</Text>
-      <SearchBar term={term} onTermChange={newTerm => setTerm(newTerm)} onTermSubmit={() => console.log("Term submitted")} />
-      <Text>{term}</Text>
+      <SearchBar term={term} onTermChange={newTerm => setTerm(newTerm)} onTermSubmit={searchApi} />
+      {errorMessage ? <Text style={styles.textStyle}>{errorMessage}</Text> : null}
+      <Text>Result length {results.length}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  textStyle: { fontSize: 30, textAlign: "center" }
+  textStyle: { textAlign: "center", color: 'red' }
 });
 
 export default SearchScreen;

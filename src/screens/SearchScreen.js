@@ -2,31 +2,36 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 import SearchBar from "../components/SearchBar";
-
-import yelp from "../api/yelp";
+import useResults from "../hooks/useResults";
+import ResultsList from "../components/ResultsLlist";
 
 const SearchScreen = () => {
-  const [term, setTerm] = useState(''),
-    [results, setResults] = useState([]),
-    [errorMessage, setErrorMessage] = useState('');
+  const [term, setTerm] = useState(""),
+    [searchApi, results, errorMessage] = useResults();
 
-  const searchApi = async () => {
-    try {
-      const response = await yelp.get('/search', { params: { limit: 50, term, location: 'san jose' } });
-      setResults(response.data.businesses);
-    } catch (err) { setErrorMessage('Something went wrong!!') }
-  }
+  const filterResultsByPrice = price =>
+    results.filter(result => result.price === price);
+
   return (
     <View>
-      <SearchBar term={term} onTermChange={newTerm => setTerm(newTerm)} onTermSubmit={searchApi} />
-      {errorMessage ? <Text style={styles.textStyle}>{errorMessage}</Text> : null}
-      <Text>Result length {results.length}</Text>
+      <SearchBar
+        term={term}
+        onTermChange={newTerm => setTerm(newTerm)}
+        onTermSubmit={() => searchApi(term)}
+      />
+      {errorMessage ? (
+        <Text style={styles.textStyle}>{errorMessage}</Text>
+      ) : null}
+      <Text>Result length:- {results.length}</Text>
+      <ResultsList title="Cost Effective" results={filterResultsByPrice("$")} />
+      <ResultsList title="Bit Pricer" results={filterResultsByPrice("$$")} />
+      <ResultsList title="Bit Spender" results={filterResultsByPrice("$$$")} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  textStyle: { textAlign: "center", color: 'red' }
+  textStyle: { textAlign: "center", color: "red" }
 });
 
 export default SearchScreen;

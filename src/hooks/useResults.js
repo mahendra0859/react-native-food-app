@@ -13,8 +13,8 @@ export default () => {
       });
       setResults(response.data.businesses);
     } catch (err) {
-      setResults(data);
-      // setErrorMessage("Something went wrong!");
+      // setResults(data);
+      setErrorMessage("Something went wrong!");
     }
   };
   useEffect(() => searchApi("pasta"), []);

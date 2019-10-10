@@ -3,18 +3,15 @@ import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import yelp from "../api/yelp";
 
 const ResultsShowScreen = ({ navigation }) => {
-  const id = navigation.getParam("id"),
-    [result, setResult] = useState(null),
+  const [result, setResult] = useState(null),
+    id = navigation.getParam("id"),
     getResult = async id => {
-      try {
-        const { data } = await yelp.get(`/${id}`);
-        setResult(data);
-      } catch (err) {
-        console.log("err", err);
-      }
+      const { data } = await yelp.get(`/${id}`);
+      setResult(data);
     };
-
-  useEffect(() => getResult(id), []);
+  useEffect(() => {
+    getResult(id);
+  }, []);
 
   if (!result) {
     return null;

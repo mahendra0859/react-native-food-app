@@ -17,6 +17,8 @@ export default () => {
       setErrorMessage("Something went wrong!");
     }
   };
-  useEffect(() => searchApi("pasta"), []);
+  useEffect(() => {
+    searchApi("pasta");
+  }, []);
   return [searchApi, results, errorMessage];
 };
